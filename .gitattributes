@@ -1,0 +1,3 @@
+# don't mess with the line endings, git.
+# loads of VC++ files that probably wouldn't like LF.
+* text=binary
