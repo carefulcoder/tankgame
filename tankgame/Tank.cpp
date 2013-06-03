@@ -9,6 +9,11 @@ void Tank::rotateTurret(float amt) {
 }
  
 void Tank::setTurretRotation(float amt) {
+	if (amt < 0.0f) {
+		amt = 360 - amt;
+	} else if (amt > 360.0f) {
+		amt -= 360.0f;
+	}
 	this->turretRotation = amt;
 }
 

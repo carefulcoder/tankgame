@@ -21,16 +21,23 @@ void Computer::tick() {
 			float dy = myPos.y - playerPos.y;
 
 			//TOA, then get result in degrees.
-			float angle = glm::degrees(90.0f - atan(dx / dy));
+			float angle = 90.0f - glm::degrees(atan(dx / dy));
 
 			//sort out angle issues
 			if (dx > 0 && dy > 0) {
-				angle += 180;
+				angle += 180.0f;
 			} else if (dx < 0 && dy > 0) {
-				angle -= 180;
+				angle -= 180.0f;
 			}
 
-			tank->setTurretRotation(angle);
+			//correct aim if out more than 5
+			if (abs(angle - oldAngle) > 5.0f) {
+				if ((angle < oldAngle || angle - oldAngle >= 180.0f)) {
+					tank->setTurretRotation(oldAngle - 0.2f);			
+				} else {
+					tank->setTurretRotation(oldAngle + 0.2f);
+				}			
+			}
 		}	
 	}
 }

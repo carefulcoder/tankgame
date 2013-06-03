@@ -18,10 +18,10 @@ int main(int argc, char **argv)
 {
 	SDL_Init( SDL_INIT_VIDEO );
 	const SDL_VideoInfo* info = SDL_GetVideoInfo(); 
-	int height = info->current_h; 
-	int width = info->current_w; 
+	int height = info->current_h / 2; 
+	int width = info->current_w / 2; 
 
-	SDL_Surface* screen = SDL_SetVideoMode( width, height, 0, SDL_OPENGL | SDL_FULLSCREEN );
+	SDL_Surface* screen = SDL_SetVideoMode( width, height, 0, SDL_OPENGL );
 	SDL_WM_SetCaption( "Tank App" , 0 ); 
 
 	//SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 0);
