@@ -4,9 +4,9 @@ Player::Player(Tank& tnk) : tank(tnk), rotAmount(0.0f), rotTAmount(0.0f) {}
 
 void Player::keyDown(SDLKey k) {
 	if (k == SDLK_UP) {
-		tank.addVelocity(5);
+		tank.setVelocity(5.0f);
 	} else if (k == SDLK_DOWN) {
-		tank.addVelocity(-5);
+		tank.setVelocity(0.0f);
 	} else if (k == SDLK_RIGHT) {
 		rotAmount = 3.0f;
 	} else if (k == SDLK_LEFT) {
@@ -22,9 +22,9 @@ void Player::keyUp(SDLKey k) {
 	if (k == SDLK_RIGHT || k == SDLK_LEFT) {
 		rotAmount = 0;
 	} else if (k == SDLK_UP) {
-		tank.addVelocity(-5.0f);
+		tank.setVelocity(0.0f);
 	} else if (k == SDLK_DOWN) {
-		tank.addVelocity(5.0f);
+		tank.setVelocity(5.0f);
 	} else if (k == SDLK_a || k == SDLK_d) {
 		rotTAmount = 0;
 	}

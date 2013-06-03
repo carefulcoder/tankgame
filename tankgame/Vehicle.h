@@ -23,7 +23,7 @@ public:
 	float getVelocity();
 	
 	//add some velocity to us
-	void addVelocity(float amount);
+	void setVelocity(float amount);
 
 	virtual void rotate(float amount);
 

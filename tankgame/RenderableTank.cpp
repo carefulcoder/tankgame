@@ -5,5 +5,5 @@ RenderableTank::RenderableTank(int tankTex, int turTex, Tank& tank) : Renderable
 
 void RenderableTank::draw(Canvas &canvas) {
 	RenderableVehicle::draw(canvas); //draw the body of our tank, then below cast to a tank & draw the turret.
-	canvas.draw(1, glm::rotate(this->vehicle.getTransform(), ((Tank&)this->vehicle).getTurretRotation(), glm::vec3(0.0f, 0.0f, 1.0f)));
+	canvas.draw(1, glm::rotate(glm::translate(glm::mat4(1.0f), this->vehicle.getPosition()), ((Tank&)this->vehicle).getTurretRotation(), glm::vec3(0.0f, 0.0f, 1.0f)));
 }

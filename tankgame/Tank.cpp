@@ -23,5 +23,6 @@ float Tank::getTurretRotation() {
 }
 
 void Tank::rotate(float amt) {
+	this->setTurretRotation(this->getTurretRotation() + amt);
 	Vehicle::rotate(amt);
 }

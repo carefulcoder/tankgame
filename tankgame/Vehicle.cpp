@@ -6,8 +6,8 @@ Vehicle::Vehicle(glm::vec3 pos, float width, float height) : width(width), heigh
 	this->velocity = 0.0f;
 }
 
-void Vehicle::addVelocity(float amount) {
-	this->velocity += amount;
+void Vehicle::setVelocity(float amount) {
+	this->velocity = amount;
 }
 
 void Vehicle::rotate(float amount) {
