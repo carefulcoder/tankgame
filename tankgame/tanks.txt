@@ -1,0 +1,31 @@
+a 0 0 18 22
+b 18 0 18 22
+c 36 0 18 22
+d 54 0 18 22
+e
+f
+g
+h
+i
+j
+k
+l
+m
+n
+o
+p
+q
+r
+s
+t
+u
+v
+w
+x
+y
+z
+tank 0 48 64 39
+turret 65 49 64 29
+grass 130 45 64 64
+crater 192 44 64 64
+error 0 88 64 64

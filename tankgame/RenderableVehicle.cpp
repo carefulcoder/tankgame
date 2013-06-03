@@ -5,5 +5,5 @@ RenderableVehicle::RenderableVehicle(int texture, Vehicle& veh) : Renderable(), 
 
 void RenderableVehicle::draw(Canvas &canvas) {
 	this->vehicle.tick(); //update internal stuff
-	canvas.draw(0, this->vehicle.getTransform());
+	canvas.draw("tank", this->vehicle.getTransform());
 }

@@ -1,5 +1,6 @@
 
 #include "Canvas.h"
+#include "TextureMapper.h"
 #include "RenderableTank.h"
 #include "Player.h"
 #include "Computer.h"
@@ -27,7 +28,7 @@ int main(int argc, char **argv)
 	//SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 0);
 
 	//init our sprite engine - the canvas for drawing and a vector to store
-	Canvas * canvas = new Canvas(width, height, "atlas.png", 8);
+	Canvas * canvas = new Canvas(width, height, "tanks", 8);
 	std::vector<Renderable *> sprites;
 
 	//create the player's Tank and give it to a player controller for manipulation
@@ -66,15 +67,17 @@ int main(int argc, char **argv)
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
 		//draw our tile based world.
 		float tilesX = ((float)width) / 64.0f;
 		float tilesY = ((float)height) / 64.0f;
 		for (float x = 0; x < tilesX; x++) {
 			for (float y = 0; y < tilesY; y++) {
-				canvas->draw(2, glm::translate(glm::mat4(1.0f), glm::vec3((float)x * 64 + 32, (float)y * 64 + 32, 0.0f)));
+				canvas->draw("grass", glm::translate(glm::mat4(1.0f), glm::vec3((float)x * 64 + 32, (float)y * 64 + 32, 0.0f)));
 			}
 		}
-		
+
+		canvas->draw("a", glm::translate(glm::mat4(1.0f), glm::vec3(100, 100, 0)));
 
 		//call our renderable objects to get them to draw to our OpenGL canvas.
 		for (std::vector<Renderable*>::iterator it = sprites.begin(); it != sprites.end(); ++it) {

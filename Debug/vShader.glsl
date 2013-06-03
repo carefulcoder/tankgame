@@ -1,6 +1,6 @@
 varying vec2 texture_coordinate;
 uniform mat4 mvp;
-uniform vec4 uvs;
+uniform vec2 uvs;
 
 void main(void)
 {
