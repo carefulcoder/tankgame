@@ -12,6 +12,7 @@
 #include "TextureMapper.h"
 #include <iostream>
 #include <SOIL.h>
+#include <locale>
 
 class Canvas {
 

@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 			}
 		}
 
-		canvas->draw("a", glm::translate(glm::mat4(1.0f), glm::vec3(100, 100, 0)));
+		canvas->text("javaguys tank game", glm::vec2(50.0f, 100.0f));
 
 		//call our renderable objects to get them to draw to our OpenGL canvas.
 		for (std::vector<Renderable*>::iterator it = sprites.begin(); it != sprites.end(); ++it) {

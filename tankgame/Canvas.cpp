@@ -129,7 +129,21 @@ void Canvas::draw(const std::string& texture, glm::mat4 transform) {
 //helper method to draw sprite text onto the screen
 void Canvas::text(const std::string& text, glm::vec2 start) {
 
+	glm::vec3 translate = glm::vec3(start, 0.0f);
+	for (int i = 0; i < text.length(); i++) {
 
+		//grab the letter to draw
+		std::string letter = text.substr(i, 1);
+
+		//handle spaces
+		if (letter == " ") {
+			letter = "space";
+		}
+
+		glm::vec4 coords = this->mapper.getCoordinates(letter);
+		this->draw(letter, glm::translate(glm::mat4(1.0f), translate));			
+		translate.x += coords[2]; //2 = x width
+	}
 }
 
 /*
