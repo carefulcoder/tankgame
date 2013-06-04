@@ -51,9 +51,6 @@ void TankGame::run(Canvas& canvas) {
 				break;
 			}
 
-			bullets.
-			bullets.erase(bullet);
-
 		//dying - it was the player, so do more
 		} else if (bullet && it == tanks.begin()) {
 			canvas.text("hit r to respawn", glm::vec2(20.0f, 50.0f));
