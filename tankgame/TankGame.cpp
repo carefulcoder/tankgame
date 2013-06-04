@@ -2,9 +2,9 @@
 
 TankGame::TankGame() : tanks(std::vector<Tank *>(0)), bullets(std::vector<Vehicle *>(0)), computer(NULL), collisions(NULL) {
 	srand((int)time(NULL));
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 4; i++) {
 		this->tanks.push_back(new Tank(glm::vec3(rand() % 1280, rand() % 720, 0.0f))); //todo fix res hard coding
-	}
+	}	
 
 	computer = new Computer(*this->tanks[0]);
 	collisions = new Collisions(this->bullets);
@@ -33,10 +33,10 @@ void TankGame::run(Canvas& canvas) {
 
 		//firing of bullet
 		if (tank.serviceFireRequest()) {
-			glm::vec4 pos =  glm::translate(tank.getTurret().getTransform(), glm::vec3((tank.getWidth() / 2) + 4.0f, 0.0f, 0.0f)) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+			glm::vec4 pos =  glm::translate(tank.getTurret().getTransform(), glm::vec3((tank.getWidth() / 2) + 6.0f, 0.0f, 0.0f)) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 			Vehicle * bullet = new Vehicle(glm::vec3(pos.x, pos.y, pos.z), 8, 6);
 			bullet->setAngleDegrees(tank.getAngleDegrees());
-			bullet->setVelocity(0.5f);
+			bullet->setVelocity(10.0f);
 			bullets.push_back(bullet);
 		}
 
@@ -46,14 +46,17 @@ void TankGame::run(Canvas& canvas) {
 		//dying - if we're AI just remove
 		if (bullet && it != tanks.begin()) {
 
-			//it = tanks.erase(it);
+			it = tanks.erase(it);
 			if (it == tanks.end()) {
 				break;
 			}
 
+			bullets.
+			bullets.erase(bullet);
+
 		//dying - it was the player, so do more
 		} else if (bullet && it == tanks.begin()) {
-			canvas.text("oh dear you are rather dead", glm::vec2(20.0f, 50.0f));
+			canvas.text("hit r to respawn", glm::vec2(20.0f, 50.0f));
 		//not dying
 		} else {
 			canvas.draw("tank", tank.getTransform());
