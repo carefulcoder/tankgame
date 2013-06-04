@@ -1,28 +1,42 @@
 #include "Tank.h"
 
 //constructor - initialise with vehicle constructor & 0 degrees rotation
-Tank::Tank(glm::vec3 pos) : Vehicle(pos, 64.0f, 39.0f), turretRotation(0.0f) {};
+Tank::Tank(glm::vec3 pos) : Vehicle(pos, 64.0f, 40.0f), turretRotation(0.0f), turret(*new Vehicle(pos, 64.0f, 30.0f)), fireDelay(0) {};
 
-//rotate our turret by the given amount
-void Tank::rotateTurret(float amt) {
-	this->turretRotation += amt;
-}
- 
-void Tank::setTurretRotation(float amt) {
-	if (amt < 0.0f) {
-		amt = 360 - amt;
-	} else if (amt > 360.0f) {
-		amt -= 360.0f;
-	}
-	this->turretRotation = amt;
-}
 
 //get the amount the turret is rotated
-float Tank::getTurretRotation() {
-	return this->turretRotation;
+Vehicle& Tank::getTurret() {
+	return this->turret;
+}
+
+void Tank::setVelocity(float amt) {
+	this->turret.setVelocity(amt);
+	Vehicle::setVelocity(amt);
 }
 
 void Tank::rotate(float amt) {
-	this->setTurretRotation(this->getTurretRotation() + amt);
+	this->turret.rotate(amt);
 	Vehicle::rotate(amt);
+}
+
+void Tank::tick() {
+	Vehicle::tick();
+	this->turret.setPosition(this->getPosition());
+	if (fireDelay > 0) {
+		fireDelay--;
+	}
+}
+
+void Tank::requestFire() {
+	if (this->fireDelay == 0) {
+		fireDelay = -1;
+	}
+}
+
+bool Tank::serviceFireRequest() {
+	bool should = fireDelay == -1;
+	if (should) {
+		fireDelay = 90;
+	}
+	return should;
 }

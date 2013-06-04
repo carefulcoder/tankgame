@@ -30,3 +30,7 @@ turret 65 49 64 30
 grass 130 45 64 64
 crater 192 44 64 64
 error 0 88 64 64
+bullet 95 79 6 5
+smoke 66 90 24 24
+blob 86 79 8 8
+point 68 79 7 7

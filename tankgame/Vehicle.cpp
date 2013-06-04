@@ -11,21 +11,24 @@ void Vehicle::setVelocity(float amount) {
 }
 
 void Vehicle::rotate(float amount) {
-	float newAngle = glm::degrees(2 * acos(this->rotation.w)) + amount;
-	if (newAngle > 359) { //hacky, surely this can be changed
-		newAngle -=359;
-	}
-	if (newAngle < 0) {
-		newAngle += 359;
-	}
-	this->rotation = glm::angleAxis(newAngle, glm::vec3(0.0f, 0.0f, 1.0f));
+	this->setAngleDegrees(glm::degrees(2 * acos(this->rotation.w)) + amount);
 }
 
-float Vehicle::getVelocity() {
+void Vehicle::setAngleDegrees(float amount) {
+	if (amount > 359) { //hacky, surely this can be changed
+		amount -=359;
+	}
+	if (amount < 0) {
+		amount += 359;
+	}
+	this->rotation = glm::angleAxis(amount, glm::vec3(0.0f, 0.0f, 1.0f));
+}
+
+float Vehicle::getVelocity() const {
 	return this->velocity;
 }
 
-glm::mat4 Vehicle::getTransform() {
+glm::mat4 Vehicle::getTransform() const {
 	return glm::translate(glm::mat4(1.0f), this->position) * glm::toMat4(this->rotation);
 }
  
@@ -34,18 +37,22 @@ void Vehicle::tick() {
 	this->position = glm::vec3(newLocation[3][0], newLocation[3][1], newLocation[3][2]);
 }
 
-glm::vec3 Vehicle::getPosition() {
+glm::vec3 Vehicle::getPosition() const {
 	return this->position;
 }
 
-float Vehicle::getWidth() {
+float Vehicle::getWidth() const {
 	return width;
 }
 
-float Vehicle::getHeight() {
+float Vehicle::getHeight() const {
 	return height;
 }
 
-float Vehicle::getAngleDegrees() {
+float Vehicle::getAngleDegrees() const {
 	return glm::degrees(2 * acos(this->rotation.w));
+}
+
+void Vehicle::setPosition(glm::vec3 pos) {
+	this->position = pos;
 }

@@ -4,9 +4,8 @@
 
 class Collisions {
 public:
-	Collisions(int width, int height);
-	void process(const std::vector<Tank*>& vehicles);
+	Collisions(const std::vector<Vehicle *>& vehicles);
+	const Vehicle * getObjectCollidingWith(const Vehicle& test, Canvas& cvs);
 private:
-	int worldWidth;
-	int worldHeight;
+	const std::vector<Vehicle *>& vehicles;
 };

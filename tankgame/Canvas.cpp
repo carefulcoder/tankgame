@@ -5,7 +5,7 @@
  * We create an initial square shape which is textured
  * with different textures to represent sprites.
  */
-Canvas::Canvas(int width, int height, std::string filename, int numSprites) : mapper(TextureMapper((filename + ".txt"))) {
+Canvas::Canvas(int width, int height, std::string filename, int numSprites) : mapper(TextureMapper((filename + ".txt"))), lastImage("") {
 
 	//initialise GLEW
 	GLenum err = glewInit();
@@ -17,7 +17,6 @@ Canvas::Canvas(int width, int height, std::string filename, int numSprites) : ma
 	}
 
 	//generate buffers.
-	GLuint buffers[3];
 	glGenBuffers(3, buffers);
 
 	//simple rectangle vertices
@@ -54,7 +53,7 @@ Canvas::Canvas(int width, int height, std::string filename, int numSprites) : ma
 
 	//finally buffer texture UV data to GPU
 	glBindBuffer(GL_ARRAY_BUFFER, buffers[2]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(textures), textures, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(textures), textures, GL_DYNAMIC_DRAW);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glTexCoordPointer(2, GL_FLOAT, 0, 0);
 
@@ -65,7 +64,7 @@ Canvas::Canvas(int width, int height, std::string filename, int numSprites) : ma
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 
 	// SOIL image loader to load our single texture atlas
-	GLuint image = SOIL_load_OGL_texture((filename + ".png").c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_POWER_OF_TWO);
+	image = SOIL_load_OGL_texture((filename + ".png").c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_POWER_OF_TWO);
 
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, image); //below: nearest neighbour = retro
@@ -73,7 +72,6 @@ Canvas::Canvas(int width, int height, std::string filename, int numSprites) : ma
 	
 	//shaders... create our shader program first
 	this->shaderProgram = glCreateProgramObjectARB();
-	glUseProgramObjectARB(this->shaderProgram);
 
 	//now load our fragment shader which is responsible
 	//for adjusting UV co-ordinates per sprite for their image
@@ -91,7 +89,7 @@ Canvas::Canvas(int width, int height, std::string filename, int numSprites) : ma
 	int texLoc = glGetUniformLocation(this->shaderProgram, "texture");
 	glUniform1iARB(texLoc, 1);
 
-	//now calculate an orthogonal perspective & initial view
+	//now calculate an orthographic projection matrix for 1:1 pixel - ogl unit mapping
 	this->projection = glm::ortho(0.0f, (float)width, (float)height, 0.0f, -1.0f, 1.0f);
 
 	glGetTexLevelParameterfv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &this->texWidth);
@@ -109,21 +107,34 @@ void Canvas::draw(const std::string& texture, glm::mat4 transform) {
 	//create a transformation matrix scaling our 1x1 quad up to the size of the texture we're about to draw
 	glm::mat4 model = glm::scale(glm::mat4(1.0f), glm::vec3(uvs[2] / 2, uvs[3] / 2, 1.0f));
 
-	//convert into normalised distances (so 32 is 0.5 of a 64px texture width, etc)
-	uvs[2] = (uvs[0] + uvs[2]) / this->texWidth;  //x width to x end UV
-	uvs[3] = (uvs[1] + uvs[3]) / this->texHeight; // y width to y end UV
-	uvs[1] /= texHeight;
-	uvs[0] /= texWidth;
-	
-	//send our UV vec4 to the vertex shader to be applied to the UV data
-	int uvVecLoc = glGetUniformLocation(this->shaderProgram, "uvs");
-	glUniform4fARB(uvVecLoc, uvs[0], uvs[1], uvs[2], uvs[3]);
+	if (lastImage != texture) {
+
+		//convert into normalised distances (so 32 is 0.5 of a 64px texture width, etc)
+		uvs[2] = (uvs[0] + uvs[2]) / this->texWidth;  //x width to x end UV
+		uvs[3] = (uvs[1] + uvs[3]) / this->texHeight; // y width to y end UV
+		uvs[1] /= texHeight;
+		uvs[0] /= texWidth;
+
+		//UV data for textures
+		GLfloat textures[] = {
+			uvs[0], uvs[1],
+			uvs[2], uvs[1],
+			uvs[0], uvs[3],
+			uvs[2], uvs[3]
+		};
+
+		//send our new UV maps to the GPU. Slowface?
+		//it just so happens that the texture buffer was bound last, so is still bound
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(textures), textures);
+	}
 
 	int modelLoc = glGetUniformLocation(this->shaderProgram, "mvp");
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(this->projection * transform * model));
-	
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(this->projection * transform * model));	
+
 	//...and so draw the geometry. Fixed number of indices. 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, 0);
+
+	lastImage = texture;
 }
 
 //helper method to draw sprite text onto the screen
@@ -179,6 +190,14 @@ void Canvas::addShader(GLenum type, std::string filename) {
 	glShaderSourceARB(shaderObject, 1, &cShader, NULL);
 	glCompileShaderARB(shaderObject);
 
-	//attach our vertex shader to our program, link it
+	//attach our vertex shader to our program, link it, delete
 	glAttachObjectARB(this->shaderProgram, shaderObject);
+	glDeleteShader(shaderObject);
+}
+
+//destructor
+Canvas::~Canvas() {
+	glDeleteProgram(shaderProgram);
+	glDeleteTextures(1, &image);
+	glDeleteBuffers(4, buffers);
 }

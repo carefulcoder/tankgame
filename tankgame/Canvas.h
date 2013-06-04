@@ -1,11 +1,16 @@
 #ifndef CANVAS
 #define CANVAS
 
+
 #include <vector>
 #include <GL/glew.h>
+
 #include <fstream>
 #include <string>
 #include <glm.hpp>
+
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
@@ -27,7 +32,13 @@ public:
 	//draw a string of text on the screen
 	void text(const std::string& text, glm::vec2 start);
 
+	//destructor
+	~Canvas();
+
 private:
+
+	//buffers (vertex, index, texture)
+	GLuint buffers[3];
 
 	//stores the shader prog
 	GLhandleARB shaderProgram;
@@ -44,10 +55,15 @@ private:
 	//view matrix
 	glm::mat4 view;
 
+	//texture id
+	GLuint image;
+
 	//texture size info
 	float texWidth;
 
 	float texHeight;
+
+	std::string lastImage;
 };
 
 #endif

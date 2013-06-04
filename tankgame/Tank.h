@@ -6,12 +6,18 @@
 class Tank : public Vehicle {
 public:
 	Tank(glm::vec3 pos);
-	void rotateTurret(float amt);
-	void setTurretRotation(float amt);
 	virtual void rotate(float amt);
-	float getTurretRotation();
+	virtual void setVelocity(float amt);
+	virtual void tick();
+	Vehicle& getTurret();
+
+	void requestFire();
+	bool serviceFireRequest();
+
 private:
 	float turretRotation;
+	Vehicle& turret;
+	int fireDelay;
 };
 
 #endif

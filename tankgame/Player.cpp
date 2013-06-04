@@ -32,5 +32,5 @@ void Player::keyUp(SDLKey k) {
 
 void Player::tick() {
 	tank.rotate(rotAmount);
-	tank.rotateTurret(rotTAmount);
+	tank.getTurret().rotate(rotTAmount);
 }

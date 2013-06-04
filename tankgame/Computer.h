@@ -3,9 +3,8 @@
 
 class Computer {
 public:
-	Computer(std::vector<Tank *>& tnks, int ply);
-	void tick();
+	Computer(const Tank& player);
+	void processMove(Tank& tank);
 private:
-	std::vector<Tank *> &tanks;
-	int player;
+	const Tank& player;
 };

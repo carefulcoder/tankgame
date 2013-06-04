@@ -14,26 +14,30 @@ public:
 	Vehicle(glm::vec3 pos, float width, float height);
 	
 	//get our transform matrix
-	glm::mat4 getTransform();
+	glm::mat4 getTransform() const;
 
 	//get the position of this vehicle
-	glm::vec3 getPosition();
+	glm::vec3 getPosition() const;
 
 	//get our current velocity
-	float getVelocity();
+	float getVelocity() const;
 	
 	//add some velocity to us
-	void setVelocity(float amount);
+	virtual void setVelocity(float amount);
 
 	virtual void rotate(float amount);
 
+	void setPosition(glm::vec3 pos);
+
 	//get width of vehicle
-	float getWidth();
+	float getWidth() const;
 
 	//get height of vehicle
-	float getHeight();
+	float getHeight() const;
 
-	float getAngleDegrees();
+	float getAngleDegrees() const;
+
+	void setAngleDegrees(float amount);
 	
 	//tick
 	virtual void tick();
