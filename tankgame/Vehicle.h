@@ -39,8 +39,14 @@ public:
 
 	void setAngleDegrees(float amount);
 	
+	void setRotationOffset(glm::vec3 amt);
+	
 	//tick
 	virtual void tick();
+
+	float getHealth() const;
+
+	void setHealth(float amt);
 
 private:
 	glm::vec3 position;
@@ -48,6 +54,7 @@ private:
 	float velocity;
 	float height;
 	float width;
+	float health;
 };
 
 //end header

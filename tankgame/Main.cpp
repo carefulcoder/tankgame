@@ -20,11 +20,9 @@ int main(int argc, char **argv)
 	//init our sprite engine - the canvas for drawing and a vector to store
 	Canvas * canvas = new Canvas(width, height, "tanks", 8);
 	TankGame game = TankGame();
-
-	SDL_Event event;
 	bool gameRunning = true;
 
-	while (gameRunning)
+	while (game.shouldRun())
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -42,27 +40,9 @@ int main(int argc, char **argv)
 
 		//Update Screen
 		SDL_GL_SwapBuffers();
-		
-		//handle event polling
-		if (SDL_PollEvent(&event)) {
-			if (event.type == SDL_QUIT) {
-				gameRunning = false;
-			} else if (event.type == SDL_KEYDOWN) {
-				SDLKey keyPressed = event.key.keysym.sym;
-				switch (keyPressed) {
-					case SDLK_ESCAPE:
-						gameRunning = false;
-						break;
-					default:
-						//player.keyDown(keyPressed);
-						break;
-				}
-			} else if (event.type == SDL_KEYUP) {
-				//player.keyUp(event.key.keysym.sym);
-			}
-		}
 	}
 
+	//clean up
 	delete canvas;
 	SDL_Quit();
 	return 0;

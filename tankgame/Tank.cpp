@@ -1,7 +1,8 @@
 #include "Tank.h"
 
 //constructor - initialise with vehicle constructor & 0 degrees rotation
-Tank::Tank(glm::vec3 pos) : Vehicle(pos, 64.0f, 40.0f), turretRotation(0.0f), turret(*new Vehicle(pos, 64.0f, 30.0f)), fireDelay(0) {};
+Tank::Tank(glm::vec3 pos) : Vehicle(pos, 64.0f, 40.0f), turretRotation(0.0f), turret(*new Vehicle(pos, 64.0f, 30.0f)), fireDelay(0) {
+};
 
 
 //get the amount the turret is rotated
@@ -36,7 +37,7 @@ void Tank::requestFire() {
 bool Tank::serviceFireRequest() {
 	bool should = fireDelay == -1;
 	if (should) {
-		fireDelay = 90;
+		fireDelay = 100;
 	}
 	return should;
 }

@@ -1,13 +1,19 @@
 #include "TankGame.h"
+#include <algorithm>
+
+bool dead(Vehicle * v) {
+	return v->getHealth() <= 0;
+}
 
 TankGame::TankGame() : tanks(std::vector<Tank *>(0)), bullets(std::vector<Vehicle *>(0)), computer(NULL), collisions(NULL) {
 	srand((int)time(NULL));
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 8; i++) {
 		this->tanks.push_back(new Tank(glm::vec3(rand() % 1280, rand() % 720, 0.0f))); //todo fix res hard coding
 	}	
 
 	computer = new Computer(*this->tanks[0]);
 	collisions = new Collisions(this->bullets);
+	player = new Player(*this->tanks[0]);
 }
 
 /**
@@ -26,16 +32,16 @@ void TankGame::run(Canvas& canvas) {
 
 		//the first tank is the human
 		if (it == tanks.begin()) {
-		
+			player->pollEvents();
 		} else {
 			computer->processMove(tank);
 		}
 
 		//firing of bullet
 		if (tank.serviceFireRequest()) {
-			glm::vec4 pos =  glm::translate(tank.getTurret().getTransform(), glm::vec3((tank.getWidth() / 2) + 6.0f, 0.0f, 0.0f)) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-			Vehicle * bullet = new Vehicle(glm::vec3(pos.x, pos.y, pos.z), 8, 6);
-			bullet->setAngleDegrees(tank.getAngleDegrees());
+			glm::vec4 pos =  glm::translate(tank.getTurret().getTransform(), glm::vec3((tank.getWidth() / 2) + 10.0f, 0.0f, 0.0f)) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+			Vehicle * bullet = new TransientVehicle(glm::vec3(pos.x, pos.y, pos.z), 8, 6);
+			bullet->setAngleDegrees(tank.getTurret().getAngleDegrees());
 			bullet->setVelocity(10.0f);
 			bullets.push_back(bullet);
 		}
@@ -47,6 +53,7 @@ void TankGame::run(Canvas& canvas) {
 		if (bullet && it != tanks.begin()) {
 
 			it = tanks.erase(it);
+			//ssbullet->setHealth(0.0f);
 			if (it == tanks.end()) {
 				break;
 			}
@@ -68,5 +75,16 @@ void TankGame::run(Canvas& canvas) {
 	}
 
 	//I am narcissitichch
-	canvas.text("javaguys tank game", glm::vec2(20.0f, 20.0f));
+	//canvas.text("javaguys tank game opengl", glm::vec2(20.0f, 20.0f));
+
+	//now clean up dead bullets and tanks
+	bullets.erase(std::remove_if(bullets.begin(), bullets.end(), dead), bullets.end()); 
+
+}
+
+/*
+ * Should the game continue running?
+ */
+bool TankGame::shouldRun() {
+	return !player->wantsToQuit();
 }

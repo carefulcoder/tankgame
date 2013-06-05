@@ -1,7 +1,7 @@
 #include "Vehicle.h"
 #include <gtx/quaternion.hpp>
 
-Vehicle::Vehicle(glm::vec3 pos, float width, float height) : width(width), height(height), rotation(glm::angleAxis(0.0f, glm::vec3(0.0f, 0.0f, 1.0f))) {
+Vehicle::Vehicle(glm::vec3 pos, float width, float height) : width(width), height(height), rotation(glm::angleAxis(0.0f, glm::vec3(0.0f, 0.0f, 1.0f))), health(100.0f) {
 	this->position = pos;
 	this->velocity = 0.0f;
 }
@@ -55,4 +55,12 @@ float Vehicle::getAngleDegrees() const {
 
 void Vehicle::setPosition(glm::vec3 pos) {
 	this->position = pos;
+}
+
+void Vehicle::setHealth(float amt) {
+	this->health = amt;
+}
+
+float Vehicle::getHealth() const {
+	return health;
 }

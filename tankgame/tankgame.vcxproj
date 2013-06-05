@@ -18,6 +18,7 @@
     <ClInclude Include="Tank.h" />
     <ClInclude Include="TankGame.h" />
     <ClInclude Include="TextureMapper.h" />
+    <ClInclude Include="TransientVehicle.h" />
     <ClInclude Include="Vehicle.h" />
   </ItemGroup>
   <ItemGroup>
@@ -29,6 +30,7 @@
     <ClCompile Include="Tank.cpp" />
     <ClCompile Include="TankGame.cpp" />
     <ClCompile Include="TextureMapper.cpp" />
+    <ClCompile Include="TransientVehicle.cpp" />
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

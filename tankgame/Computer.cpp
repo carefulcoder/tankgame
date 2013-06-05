@@ -58,6 +58,9 @@ void Computer::processMove(Tank& tank) {
 		tank.setVelocity(2.0f);
 	} else {
 		tank.setVelocity(0.0f);
+	}
+
+	if (glm::distance(playerPos, tank.getPosition()) < 800.0f) {
 		tank.requestFire();
 	}
 }
