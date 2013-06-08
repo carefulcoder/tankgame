@@ -15,6 +15,7 @@
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="Computer.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="Tank.h" />
     <ClInclude Include="TankGame.h" />
     <ClInclude Include="TextureMapper.h" />
@@ -27,6 +28,7 @@
     <ClCompile Include="Computer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Score.cpp" />
     <ClCompile Include="Tank.cpp" />
     <ClCompile Include="TankGame.cpp" />
     <ClCompile Include="TextureMapper.cpp" />

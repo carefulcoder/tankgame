@@ -5,7 +5,7 @@
  * We create an initial square shape which is textured
  * with different textures to represent sprites.
  */
-Canvas::Canvas(int width, int height, std::string filename, int numSprites) : mapper(TextureMapper((filename + ".txt"))), lastImage("") {
+Canvas::Canvas(int width, int height, std::string filename, int numSprites) : mapper(TextureMapper((filename + ".txt"))) {
 
 	//initialise GLEW
 	GLenum err = glewInit();
@@ -67,8 +67,10 @@ Canvas::Canvas(int width, int height, std::string filename, int numSprites) : ma
 	image = SOIL_load_OGL_texture((filename + ".png").c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_POWER_OF_TWO);
 
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, image); //below: nearest neighbour = retro
+	glBindTexture(GL_TEXTURE_2D, image);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
 	
 	//shaders... create our shader program first
 	this->shaderProgram = glCreateProgramObjectARB();
@@ -99,49 +101,46 @@ Canvas::Canvas(int width, int height, std::string filename, int numSprites) : ma
 /*
  * Draw our sprites onto the screen.
  */
-void Canvas::draw(const std::string& texture, glm::mat4 transform) {
+void Canvas::draw(const std::string& texture, glm::mat4 transform, glm::vec2 textureRepeat) {
 
 	//grab the UV texture maps of the image we want to draw
 	glm::vec4 uvs = this->mapper.getCoordinates(texture);
+	
+	//grab the "scale" of our UVs, so instead of 0...1 we have 0... sprite width/ height
+	//which we then fract and multiply by the UVs of the texture map for repeating textures
+	glm::vec2 uvScale(1.0f);
 
 	//create a transformation matrix scaling our 1x1 quad up to the size of the texture we're about to draw
 	glm::mat4 model = glm::scale(glm::mat4(1.0f), glm::vec3(uvs[2] / 2, uvs[3] / 2, 1.0f));
 
-	if (lastImage != texture) {
+	//convert into normalised distances (so 32 is 0.5 of a 64px texture width, etc)
+	uvs[2] = (uvs[0] + uvs[2]) / this->texWidth;  //x width to x end UV
+	uvs[3] = (uvs[1] + uvs[3]) / this->texHeight; // y width to y end UV
+	uvs[1] /= texHeight;
+	uvs[0] /= texWidth;
 
-		//convert into normalised distances (so 32 is 0.5 of a 64px texture width, etc)
-		uvs[2] = (uvs[0] + uvs[2]) / this->texWidth;  //x width to x end UV
-		uvs[3] = (uvs[1] + uvs[3]) / this->texHeight; // y width to y end UV
-		uvs[1] /= texHeight;
-		uvs[0] /= texWidth;
+	int uvLoc = glGetUniformLocation(this->shaderProgram, "uvs");
+	glUniform4f(uvLoc, uvs[0], uvs[1], uvs[2], uvs[3]);
 
-		//UV data for textures
-		GLfloat textures[] = {
-			uvs[0], uvs[1],
-			uvs[2], uvs[1],
-			uvs[0], uvs[3],
-			uvs[2], uvs[3]
-		};
-
-		//send our new UV maps to the GPU. Slowface?
-		//it just so happens that the texture buffer was bound last, so is still bound
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(textures), textures);
-	}
+	int uvScaleLoc = glGetUniformLocation(this->shaderProgram, "uvScale");
+	glUniform2f(uvScaleLoc, textureRepeat[0], textureRepeat[1]);
 
 	int modelLoc = glGetUniformLocation(this->shaderProgram, "mvp");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(this->projection * transform * model));	
 
 	//...and so draw the geometry. Fixed number of indices. 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, 0);
+}
 
-	lastImage = texture;
+void Canvas::draw(const std::string& texture, glm::mat4 transform) {
+	this->draw(texture, transform, glm::vec2(1.0f));
 }
 
 //helper method to draw sprite text onto the screen
 void Canvas::text(const std::string& text, glm::vec2 start) {
 
 	glm::vec3 translate = glm::vec3(start, 0.0f);
-	for (int i = 0; i < text.length(); i++) {
+	for (unsigned int i = 0; i < text.length(); i++) {
 
 		//grab the letter to draw
 		std::string letter = text.substr(i, 1);

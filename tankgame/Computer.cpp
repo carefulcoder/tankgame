@@ -12,6 +12,14 @@ void Computer::processMove(Tank& tank) {
 	//figure out where the player is
 	glm::vec3 playerPos = player.getPosition();
 
+	//first - is the player alive?
+	if (player.getHealth() <= 0.0f) {
+		tank.setVelocity(0.0f);
+		tank.rotate(5.0f); //celebrate victory
+		tank.getTurret().rotate(-10.0f);
+		return;
+	}
+
 	glm::vec3 myPos = tank.getPosition();
 	float oldTurretAngle = tank.getTurret().getAngleDegrees();
 	float oldTankAngle = tank.getAngleDegrees();
@@ -60,7 +68,7 @@ void Computer::processMove(Tank& tank) {
 		tank.setVelocity(0.0f);
 	}
 
-	if (glm::distance(playerPos, tank.getPosition()) < 800.0f) {
+	if (glm::distance(playerPos, tank.getPosition()) < 400.0f && abs(angle - oldTankAngle) < 10.0f) {
 		tank.requestFire();
 	}
 }

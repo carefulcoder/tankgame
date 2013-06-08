@@ -37,7 +37,7 @@ void Tank::requestFire() {
 bool Tank::serviceFireRequest() {
 	bool should = fireDelay == -1;
 	if (should) {
-		fireDelay = 100;
+		fireDelay = 40;
 	}
 	return should;
 }

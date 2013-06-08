@@ -1,19 +1,18 @@
 #include "TankGame.h"
-#include <algorithm>
+
 
 bool dead(Vehicle * v) {
 	return v->getHealth() <= 0;
 }
 
-TankGame::TankGame() : tanks(std::vector<Tank *>(0)), bullets(std::vector<Vehicle *>(0)), computer(NULL), collisions(NULL) {
+TankGame::TankGame() : tanks(std::vector<Tank *>(0)), bullets(std::vector<Vehicle *>(0)), computer(NULL), collisions(NULL), wave(1) {
 	srand((int)time(NULL));
-	for (int i = 0; i < 8; i++) {
-		this->tanks.push_back(new Tank(glm::vec3(rand() % 1280, rand() % 720, 0.0f))); //todo fix res hard coding
-	}	
-
+	this->sprinkleTanks(); //place a player
 	computer = new Computer(*this->tanks[0]);
 	collisions = new Collisions(this->bullets);
 	player = new Player(*this->tanks[0]);
+	score = new Score();
+	wave = 0;
 }
 
 /**
@@ -22,6 +21,11 @@ TankGame::TankGame() : tanks(std::vector<Tank *>(0)), bullets(std::vector<Vehicl
  * We also loop through the bullets to draw 'em and move them rapidly about.
  */
 void TankGame::run(Canvas& canvas) {
+
+	if (tanks.size() == 1) {
+		this->wave++;
+		this->sprinkleTanks();
+	}
 
 	//iterate through all the tanks, handling all application logic related to them
 	for (std::vector<Tank *>::iterator it = tanks.begin(); it != tanks.end(); ++it) {
@@ -46,25 +50,28 @@ void TankGame::run(Canvas& canvas) {
 			bullets.push_back(bullet);
 		}
 
-		//find out if a bullet in the game world has hit our tank
-		const Vehicle * bullet = collisions->getObjectCollidingWith(tank, canvas);
+		//don't bother with collisions if we're dead
+		if (tank.getHealth() > 0.0f) {
 
-		//dying - if we're AI just remove
-		if (bullet && it != tanks.begin()) {
+			//find out if a bullet in the game world has hit our tank
+			const Vehicle * bullet = collisions->getObjectCollidingWith(tank, canvas);
 
-			it = tanks.erase(it);
-			//ssbullet->setHealth(0.0f);
-			if (it == tanks.end()) {
-				break;
-			}
+			if (bullet) { //dying!
+				tank.setHealth(0.0f);
 
-		//dying - it was the player, so do more
-		} else if (bullet && it == tanks.begin()) {
-			canvas.text("hit r to respawn", glm::vec2(20.0f, 50.0f));
-		//not dying
-		} else {
-			canvas.draw("tank", tank.getTransform());
-			canvas.draw("turret", tank.getTurret().getTransform());
+				//add score if AI, reset if player
+				if (it != tanks.begin()) {
+					score->addScore();
+				} else {
+					score->resetMultiplier();
+				}
+
+			} else  { //not dying
+				canvas.draw("tank", tank.getTransform());
+				canvas.draw("turret", tank.getTurret().getTransform());
+			}		
+		} else if (it == tanks.begin()) {
+			canvas.text("press r to respawn", glm::vec2(20.0f, 50.0f));
 		}
 	}
 
@@ -74,12 +81,15 @@ void TankGame::run(Canvas& canvas) {
 		canvas.draw("bullet", (*bullet)->getTransform());
 	}
 
-	//I am narcissitichch
-	//canvas.text("javaguys tank game opengl", glm::vec2(20.0f, 20.0f));
+	//show the wave #
+	std::ostringstream ss;
+	ss << wave << " score " << score->getScore() << " x" << score->getMultiplier();
 
-	//now clean up dead bullets and tanks
+	canvas.text("wave " + ss.str(), glm::vec2(20.0f, 20.0f));
+
+	//now clean up dead bullets and tanks with the erase / remove idiom
 	bullets.erase(std::remove_if(bullets.begin(), bullets.end(), dead), bullets.end()); 
-
+	tanks.erase(std::remove_if(tanks.begin()+1, tanks.end(), dead), tanks.end());
 }
 
 /*
@@ -87,4 +97,17 @@ void TankGame::run(Canvas& canvas) {
  */
 bool TankGame::shouldRun() {
 	return !player->wantsToQuit();
+}
+
+void TankGame::sprinkleTanks() {
+	for (int i = 0; i <  wave; i++) {
+		this->tanks.push_back(new Tank(glm::vec3(rand() % 1280, rand() % 720, 0.0f))); //todo fix res hard coding
+	}
+}
+
+TankGame::~TankGame() {
+	delete score;
+	delete collisions;
+	delete computer;
+	delete player;
 }

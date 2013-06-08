@@ -26,6 +26,10 @@ public:
 	//constructor, aspect ratio
 	Canvas(int width, int height, std::string filename, int numSprites);
 	
+	//draw the given texture with the given transform, repeating it x by x times
+	void draw(const std::string& texture, glm::mat4 transform, glm::vec2 textureRepeat);
+
+
 	//draw the given texture with the given transform
 	void draw(const std::string& texture, glm::mat4 transform);
 
@@ -62,8 +66,6 @@ private:
 	float texWidth;
 
 	float texHeight;
-
-	std::string lastImage;
 };
 
 #endif

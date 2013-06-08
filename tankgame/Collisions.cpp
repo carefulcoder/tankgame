@@ -15,7 +15,6 @@ const Vehicle * Collisions::getObjectCollidingWith(const Vehicle& test, Canvas& 
 		const Vehicle * other = *o;
 		glm::vec3 otherPos = other->getPosition();
 
-
 		//do a quick bounding sphere test first to see if there is any chance of these two vehicles colliding.
 		if (glm::distance(vehiclePos, otherPos) < std::max(other->getWidth(), other->getHeight()) + std::max(vehicle->getWidth(), vehicle->getHeight())) {
 

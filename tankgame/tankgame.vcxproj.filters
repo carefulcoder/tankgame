@@ -57,6 +57,12 @@
     <ClInclude Include="TankGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TransientVehicle.h">
+      <Filter>Header Files\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="Score.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -85,6 +91,12 @@
     </ClCompile>
     <ClCompile Include="TankGame.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TransientVehicle.cpp">
+      <Filter>Source Files\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="Score.cpp">
+      <Filter>Source Files\Controller</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

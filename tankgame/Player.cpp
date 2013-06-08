@@ -28,8 +28,12 @@ void Player::pollEvents()
 			this->keyUp(evt.key.keysym.sym);
 		}
 	}
-	tank.rotate(rotAmount);
-	tank.getTurret().rotate(rotTAmount);
+	if (tank.getHealth() > 0) {
+		tank.rotate(rotAmount);
+		tank.getTurret().rotate(rotTAmount);	
+	} else {
+		tank.setVelocity(0.0f);
+	}
 }
 
 /*
@@ -50,6 +54,8 @@ void Player::keyDown(SDLKey k) {
 		rotTAmount = 5.0f;
 	} else if (k == SDLK_SPACE) {
 		tank.requestFire();
+	} else if (k == SDLK_r && tank.getHealth() == 0.0f) {
+		tank.setHealth(100.0f); //replenish health
 	}
 }
 
