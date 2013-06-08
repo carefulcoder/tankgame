@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 
 	//init our sprite engine - the canvas for drawing and a vector to store
 	Canvas * canvas = new Canvas(width, height, "tanks", 8);
-	TankGame game = TankGame();
+	TankGame game = TankGame(width, height);
 	bool gameRunning = true;
 
 	glm::mat4 grass = glm::scale(glm::mat4(1.0f), glm::vec3(width / 32.0f, height / 32.0f, 1.0f));

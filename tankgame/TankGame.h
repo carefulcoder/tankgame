@@ -15,7 +15,7 @@
 
 class TankGame {
 public:
-	TankGame();
+	TankGame(int width, int height);
 	void run(Canvas& canvas);
 	bool shouldRun();
 	~TankGame();
@@ -29,5 +29,8 @@ private:
 	Score * score;
 
 	int wave;
+
+	int width;
+	int height;
 	void sprinkleTanks();
 };

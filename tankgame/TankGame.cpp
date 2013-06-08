@@ -1,11 +1,15 @@
 #include "TankGame.h"
 
 
-bool dead(Vehicle * v) {
-	return v->getHealth() <= 0;
+bool deletePtrIfDead(Vehicle * v) {
+	if (v->getHealth() <= 0) {
+		delete v;
+		return true;
+	}
+	return false;
 }
 
-TankGame::TankGame() : tanks(std::vector<Tank *>(0)), bullets(std::vector<Vehicle *>(0)), computer(NULL), collisions(NULL), wave(1) {
+TankGame::TankGame(int width, int height) : tanks(std::vector<Tank *>(0)), bullets(std::vector<Vehicle *>(0)), computer(NULL), collisions(NULL), wave(1), width(width), height(height) {
 	srand((int)time(NULL));
 	this->sprinkleTanks(); //place a player
 	computer = new Computer(*this->tanks[0]);
@@ -41,17 +45,17 @@ void TankGame::run(Canvas& canvas) {
 			computer->processMove(tank);
 		}
 
-		//firing of bullet
-		if (tank.serviceFireRequest()) {
-			glm::vec4 pos =  glm::translate(tank.getTurret().getTransform(), glm::vec3((tank.getWidth() / 2) + 10.0f, 0.0f, 0.0f)) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-			Vehicle * bullet = new TransientVehicle(glm::vec3(pos.x, pos.y, pos.z), 8, 6);
-			bullet->setAngleDegrees(tank.getTurret().getAngleDegrees());
-			bullet->setVelocity(10.0f);
-			bullets.push_back(bullet);
-		}
-
 		//don't bother with collisions if we're dead
 		if (tank.getHealth() > 0.0f) {
+
+			//firing of bullet
+			if (tank.serviceFireRequest()) {
+				glm::vec4 pos =  glm::translate(tank.getTurret().getTransform(), glm::vec3((tank.getWidth() / 2) + 10.0f, 0.0f, 0.0f)) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+				Vehicle * bullet = new TransientVehicle(glm::vec3(pos.x, pos.y, pos.z), 8, 6);
+				bullet->setAngleDegrees(tank.getTurret().getAngleDegrees());
+				bullet->setVelocity(10.0f);
+				bullets.push_back(bullet);
+			}
 
 			//find out if a bullet in the game world has hit our tank
 			const Vehicle * bullet = collisions->getObjectCollidingWith(tank, canvas);
@@ -88,8 +92,8 @@ void TankGame::run(Canvas& canvas) {
 	canvas.text("wave " + ss.str(), glm::vec2(20.0f, 20.0f));
 
 	//now clean up dead bullets and tanks with the erase / remove idiom
-	bullets.erase(std::remove_if(bullets.begin(), bullets.end(), dead), bullets.end()); 
-	tanks.erase(std::remove_if(tanks.begin()+1, tanks.end(), dead), tanks.end());
+	bullets.erase(std::remove_if(bullets.begin(), bullets.end(), deletePtrIfDead), bullets.end()); 
+	tanks.erase(std::remove_if(tanks.begin()+1, tanks.end(), deletePtrIfDead), tanks.end());
 }
 
 /*
@@ -101,7 +105,7 @@ bool TankGame::shouldRun() {
 
 void TankGame::sprinkleTanks() {
 	for (int i = 0; i <  wave; i++) {
-		this->tanks.push_back(new Tank(glm::vec3(rand() % 1280, rand() % 720, 0.0f))); //todo fix res hard coding
+		this->tanks.push_back(new Tank(glm::vec3(rand() % width, rand() % height, 0.0f))); //todo fix res hard coding
 	}
 }
 
