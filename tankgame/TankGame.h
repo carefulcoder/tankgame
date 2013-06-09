@@ -11,6 +11,7 @@
 #include "Computer.h"
 #include "Collisions.h"
 #include "Player.h"
+#include "Music.h"
 
 
 class TankGame {
@@ -27,6 +28,7 @@ private:
 	Collisions* collisions;
 	Player * player;
 	Score * score;
+	Music * music;
 
 	int wave;
 

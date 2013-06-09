@@ -14,6 +14,7 @@
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="Computer.h" />
+    <ClInclude Include="Music.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="Tank.h" />
@@ -27,6 +28,7 @@
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Computer.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Music.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Tank.cpp" />
@@ -64,15 +66,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <ExecutablePath>$(ProjectDir)\lib\GLEW\bin;$(ProjectDir)\lib\SDL\bin;$(ProjectDir)\lib\SOIL\bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(ProjectDir)\lib\GLEW\include;$(ProjectDir)\lib\GLM;$(ProjectDir)\lib\SDL\include;$(ProjectDir)\lib\SOIL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\lib\GLEW\lib;$(ProjectDir)\lib\SDL\lib;$(ProjectDir)\lib\SOIL\lib;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>O:\tankgame\tankgame\lib\PXTone\bin;$(ProjectDir)\lib\GLEW\bin;$(ProjectDir)\lib\SDL\bin;$(ProjectDir)\lib\SOIL\bin;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>O:\tankgame\tankgame\lib\PXTone;$(ProjectDir)\lib\GLEW\include;$(ProjectDir)\lib\GLM;$(ProjectDir)\lib\SDL\include;$(ProjectDir)\lib\SOIL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>O:\tankgame\tankgame\lib\PXTone\lib;$(ProjectDir)\lib\GLEW\lib;$(ProjectDir)\lib\SDL\lib;$(ProjectDir)\lib\SOIL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <ExecutablePath>$(ProjectDir)\lib\GLEW\bin;$(ProjectDir)\lib\SDL\bin;$(ProjectDir)\lib\SOIL\bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(ProjectDir)\lib\GLEW\include;$(ProjectDir)\lib\GLM;$(ProjectDir)\lib\SDL\include;$(ProjectDir)\lib\SOIL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\lib\GLEW\lib;$(ProjectDir)\lib\SDL\lib;$(ProjectDir)\lib\SOIL\lib;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>O:\tankgame\tankgame\lib\PXTone\bin;$(ProjectDir)\lib\GLEW\bin;$(ProjectDir)\lib\SDL\bin;$(ProjectDir)\lib\SOIL\bin;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>O:\tankgame\tankgame\lib\PXTone;$(ProjectDir)\lib\GLEW\include;$(ProjectDir)\lib\GLM;$(ProjectDir)\lib\SDL\include;$(ProjectDir)\lib\SOIL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>O:\tankgame\tankgame\lib\PXTone\lib;$(ProjectDir)\lib\GLEW\lib;$(ProjectDir)\lib\SDL\lib;$(ProjectDir)\lib\SOIL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -85,7 +87,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalOptions>"SOIL.lib" "SDL.lib" "SDLmain.lib" "glew32.lib" "opengl32.lib" /LTCG /NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"SOIL.lib" "SDL.lib" "SDLmain.lib" "glew32.lib" "opengl32.lib" "pxtoneDLL.lib" /LTCG</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -103,7 +105,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalOptions>"SOIL.lib" "SDL.lib" "SDLmain.lib" "glew32.lib" "opengl32.lib" /LTCG %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"SOIL.lib" "SDL.lib" "SDLmain.lib" "glew32.lib" "opengl32.lib" "pxtoneDLL.lib" /LTCG</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

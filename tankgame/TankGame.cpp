@@ -16,6 +16,7 @@ TankGame::TankGame(int width, int height) : tanks(std::vector<Tank *>(0)), bulle
 	collisions = new Collisions(this->bullets);
 	player = new Player(*this->tanks[0]);
 	score = new Score();
+	music = new Music();
 	wave = 0;
 }
 
